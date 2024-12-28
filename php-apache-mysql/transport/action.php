@@ -1,5 +1,5 @@
 <?php 
-$con=mysqli_connect('localhost','root','rootpassword','transport');
+$con=mysqli_connect('mysql','root','rootpassword','transport');
 session_start();
 if (isset($_POST['alogin'])) {
 	$name=$_POST['uname'];
