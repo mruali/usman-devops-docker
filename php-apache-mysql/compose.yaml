@@ -20,8 +20,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword # Set the MySQL root password
       MYSQL_DATABASE: transport # Set the database name
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: adminpassword
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpassword
     volumes:
       - db-data:/var/lib/mysql  # Persistent data storage for the MySQL database
       - ./transport/transport.sql:/docker-entrypoint-initdb.d/transport.sql
