@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  # PHP backend with Apache service
+  php-apache:
+    build:
+      context: .
+    container_name: php-apache-container
+    ports:
+      - "80:80"  # Exposing port 80 to the host machine (localhost:80)
+    volumes:
+      - ./transport:/var/www/html  # Mount the 'transport' folder to /var/www/html in the container
+    networks:
+      - app-network
+
+  # MySQL database service
+  mysql:
+    image: mysql:5.7
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword # Set the MySQL root password
+      MYSQL_DATABASE: transport # Set the database name
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: adminpassword
+    volumes:
+      - db-data:/var/lib/mysql  # Persistent data storage for the MySQL database
+      - ./transport/transport.sql:/docker-entrypoint-initdb.d/transport.sql
+    ports:
+      - "3307:3306"  # Exposing port 3307 to interact with MySQL from the host machine
+    networks:
+      - app-network
+
+  # phpMyAdmin service for MySQL database management
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-container
+    environment:
+      PMA_HOST: mysql  # Link phpMyAdmin to the MySQL container
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword # Set the root password
+    ports:
+      - "8080:80"  # Exposing port 8080 to the host machine (localhost:8080)
+    networks:
+      - app-network
+
+# Define the persistent storage for MySQL
+volumes:
+  db-data:
+
+# Define the network for communication between services
+networks:
+  app-network:
+    driver: bridge
